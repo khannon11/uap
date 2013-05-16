@@ -10,6 +10,9 @@
 
 <!--[if IE]><script language="javascript" type="text/javascript" src="../../Extras/excanvas.js"></script><![endif]-->
 
+<!-- jQuery file -->
+<script language="javascript" type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
 <!-- JIT Library File -->
 <script language="javascript" type="text/javascript" src="{{ STATIC_URL }}js/jit.js"></script>
 
@@ -20,7 +23,7 @@
 <body onload="init();">
 <div id="container">
 
-<div id="left-container">
+<div id="top-container">
 
 
 
@@ -29,7 +32,39 @@
 		ConceptNet Visualizer
         </h4> 
 
-		What concept would you like to explore?
+		What assertion would you like to explore? <br>
+    <form onSubmit="return false;" id="assertionSelect">
+      <input type="text" id="leftValue">
+      <select id="assertion">
+        <option value="AtLocation">is at location</option>
+        <option value="CapableOf">is capable of</option>
+        <option value="ConceptuallyRelatedTo">is conceptually related to</option>
+        <option value="CreatedBy">is created by</option>
+        <option value="Causes">causes</option>
+        <option value="CausesDesire">causes a desire to</option>
+        <option value="DefinedAs">is defined as</option>
+        <option value="Desires">desires</option>
+        <option value="HasA">has a</option>
+        <option value="HasProperty">has the property of</option>
+        <option value="HasSubevent">has subevent</option>
+        <option value="HasFirstSubevent">has first subevent</option>
+        <option value="HasLastSubevent">has last subevent</option>
+        <option value="HasPrerequisite">has a prerequisite of</option>
+        <option value="IsA">is a</option>
+        <option value="InheritsFrom">inherits from</option>
+        <option value="LocatedNear">is located near</option>
+        <option value="MadeOf">is made of</option>
+        <option value="MotivatedByGoal">is motivated by</option>
+        <option value="ObstructedBy">is obstructed by</option>
+        <option value="PartOf">is part of</option>
+        <option value="ReceivesAction">recieves the action</option>
+        <option value="SymbolOf">is a symbol of</option>
+        <option value="UsedFor">is used for</option>
+      </select>
+      <input type="text" id="rightValue">
+      0<input type="range" id="slider" min="0" max="1" value=".8" step=".02">1
+      <input type="submit" id="assertionSubmit" value="Show me similar assertions!"/>
+    </form>
             
         </div>
 
@@ -38,7 +73,7 @@
 
 </div>
 
-<div id="center-container">
+<div id="main-container">
     <div id="infovis"></div>    
 </div>
 
