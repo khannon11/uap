@@ -8,6 +8,8 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'd4dEndpoint.views.home', name='home'),
     # url(r'^d4dEndpoint/', include('d4dEndpoint.foo.urls')),
+    url(r'^similar/(?P<left>\w+)/(?P<relation>\w+)/(?P<right>\w+)/(?P<count>\d+)/$',
+        'd4d.views.similar_endpoint'),
     url(r'^d4d/(?P<query>\w+)/$', 'd4d.views.index'),
     url(r'^visualize/$', 'd4d.views.visualize'),
 

@@ -386,7 +386,7 @@ function init(){
       onCreateLabel: function(domElement, node){
           domElement.innerHTML = node.name;
           $jit.util.addEvent(domElement, 'click', function () {
-		  var new_name = JSON.parse(httpGet("http://54.243.221.116:8000/d4d/".concat(node.id)));
+		  var new_name = JSON.parse(httpGet("http://54.243.221.116:8000/d4d/".concat(node.id.replace(' ', '_'))));
 		  ht.loadJSON(new_name);
 		  ht.refresh();
                   ht.onClick(new_name.id, {

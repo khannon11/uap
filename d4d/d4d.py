@@ -149,7 +149,6 @@ import conceptnet
 import networkx as nx
 
 #Low level language tools
-print "Hello"
 from conceptnet.models import Language
 en = Language.get('en') #requires django 1.3
 en_nl = en.nl
@@ -295,7 +294,7 @@ class d4d:
     if principal_component_count == None:
       principal_component_count = self.compute_default_for_principal_component_count()    
     self.principal_component_count = principal_component_count
-    print "principal_component_count=" + str(principal_component_count)
+    #print "principal_component_count=" + str(principal_component_count)
     self.concept_axes, self.axis_weights, self.feature_axes = \
         self.sparse_matrix.svd(k=principal_component_count) #k means "number_of_principal_components"
               #concept_axes is refered to by more of the tutorial as U and
@@ -1152,7 +1151,7 @@ d4d.blend = blend #not put inside of class def since I wanted the default value 
                   
 
 
-print "d4d.py loaded"
+#print "d4d.py loaded"
 # Diagnostics  
 # self.get_col_labels().items self.get_row_labels().items
 
