@@ -64,7 +64,7 @@ function init(){
       },
       onBeforePlotLine: function(adj) {
           //adj.data.$lineWidth = Math.random() * 17 + 1;
-          console.log(adj.data);
+          //console.log(adj.data);
       },
       //Attach event handlers and add text to the
       //labels. This method is only triggered on label
@@ -115,9 +115,8 @@ function init(){
           var relation_index = assertion.indexOf(relation);
           var left = assertion.substring(0, relation_index-1).replace(" ", "_");
           var right = assertion.substring(relation_index+relation.length+1).replace(" ", "_");
-          var query = "similar/".concat(left).concat("/").concat(relation).concat("/").concat(right).concat("/10/");
+          var query = "similar/".concat(left).concat("/").concat(relation).concat("/").concat(right).concat("/").concat($("#numResults").val()).concat("/").concat($("#threshold").val()*100).concat("/");
           var new_name = JSON.parse(httpGet(base_url.concat(query)));
-          console.log(new_name);
           ht.loadJSON(new_name);
           ht.refresh();
           var html = "<h4>" + node.name + "</h4><b>Connections:</b>";
@@ -136,14 +135,18 @@ function init(){
     $("#assertionSelect").submit(function() {
       var left = $("#leftValue").val().replace(" ", "_");
       var right = $("#rightValue").val().replace(" ", "_");
-      var query = "similar/".concat(left).concat("/").concat($("#assertion").val()).concat("/").concat(right).concat("/10/");
+      var query = "similar/".concat(left).concat("/").concat($("#assertion").val()).concat("/").concat(right).concat("/").concat($("#numResults").val()).concat("/").concat($("#threshold").val()*100).concat("/");
       var new_name = JSON.parse(httpGet(base_url.concat(query)));
-      ht.loadJSON(new_name);
-      ht.refresh();
-      ht.onClick(new_name.id, {
-        onComplete: function() {
-            ht.controller.onComplete();
-        }
-      });
+      if (typeof new_name == "string" && new_name.substring(0, 2) == '!!') {
+        alert(new_name.substring(3).concat(" is not in the database :("));
+      } else {
+        ht.loadJSON(new_name);
+        ht.refresh();
+        ht.onClick(new_name.id, {
+          onComplete: function() {
+              ht.controller.onComplete();
+          }
+        });
+      }
     });
 }

@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import json
+import itertools
+import random
 from d4d_visualize import d4dExplorer
 from django.template import RequestContext
 from d4d import d4d
@@ -32,29 +34,42 @@ def get_similar_assertions(left, relation, right):
   global maxi, mini
   maxi = max([score[1] for score in similar_with_score])
   mini = min([score[1] for score in similar_with_score])
-  normalized = dict([(normalize_truth_score(assertion[1]), (assertion[0], assertion[2]))
-                for assertion in similar_with_score])
+  maxi_similar = max([score[2] for score in similar_with_score])
+  mini_similar = min([score[2] for score in similar_with_score])
+  normalized = [(normalize_truth_score(assertion[1]), assertion[0], (assertion[2]-mini_similar)/(maxi_similar-mini_similar))
+                for assertion in similar_with_score]
   return normalized
 
-def similar_endpoint(request, left, relation, right, count):
+def similar_endpoint(request, left, relation, right, count, threshold):
   left = left.replace("_", " ")
   right = right.replace("_", " ")
+  count = int(count)
   assertion = "%s %s %s" % (left, relation, right)
-  similar_assertions = get_similar_assertions(left, relation, right)[:int(count)]
-  return HttpResponse(json.dumps(out))
+  try:
+    # Filter first by seeing what's under the threshold, then look at our count
+    similar_assertions = get_similar_assertions(left, relation, right)
+    similar_assertions = list(itertools.takewhile(lambda x: x[0] > float(threshold)/100, similar_assertions))
+    if len(similar_assertions) > count:
+      # Keep the most and least true, and return a random sampling of the rest
+      similar_assertions = [similar_assertions[0]] + \
+                           [similar_assertions[1:-1][i] for i in sorted(random.sample(xrange(len(similar_assertions[1:-1])), count-3))] + \
+                           [similar_assertions[-1]]
+  except KeyError as e:
+    return HttpResponse(json.dumps("!!%s" % str(e)))
+  #return HttpResponse(json.dumps(similar_assertions))
   out = [{"id": assertion,
          "name": assertion,
-         "data": {"$dim": 30 * normalize_truth_score(d4d.c4.how_true_is(assertion))},
+         "data": {"$dim": 40 * normalize_truth_score(d4d.c4.how_true_is(assertion))},
          "adjacencies": [
-          {"nodeTo": a[0],
+          {"nodeTo": a[1],
            "data":
-            {"$lineWidth": 16}
+            {"$lineWidth": 10*a[2]+1}
           } for a in similar_assertions]}]
-  out = out + [{"id": a[0],
-                "name": a[0],
-                "data": {"$dim": 30*a[1]},
+  out = out + [{"id": a[1],
+                "name": a[1],
+                "data": {"$dim": 40*a[0]},
                 "adjacencies": {"nodeTo": assertion,
-                                "data": {"$lineWidth": 16}}
+                                "data": {"$lineWidth": 10*a[2]+1}}
                } for a in similar_assertions]
   return HttpResponse(json.dumps(out))
 
