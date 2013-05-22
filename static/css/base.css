@@ -7,6 +7,10 @@ html, body {
     background-color:#F2F2F2;
 }
 
+.node {
+font-size: 50px;
+}
+
 input, select {
     font-size:0.9em;
 }
@@ -76,7 +80,7 @@ a {
 
 #main-container {
     position:relative;
-    width:800px;
+    width:1000px;
     left:0;
     background-color:#1a1a1a;
     color:#ccc;
@@ -91,16 +95,6 @@ a {
     list-style:none;
     margin:7px;
 }
-
-#log {
-    position:absolute;
-    top:110px;
-    left:380px;
-    font-size:1.0em;
-    font-weight:bold;
-    color:#23A4FF;
-}
-
 
 #infovis {
     position:relative;

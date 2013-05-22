@@ -48,7 +48,7 @@ def similar_endpoint(request, left, relation, right, count, threshold):
   try:
     # Filter first by seeing what's under the threshold, then look at our count
     similar_assertions = get_similar_assertions(left, relation, right)
-    similar_assertions = list(itertools.takewhile(lambda x: x[0] > float(threshold)/100, similar_assertions))
+    similar_assertions = list(itertools.takewhile(lambda x: x[0] >= float(threshold)/100, similar_assertions))
     if len(similar_assertions) > count:
       # Keep the most and least true, and return a random sampling of the rest
       similar_assertions = [similar_assertions[0]] + \
