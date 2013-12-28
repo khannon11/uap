@@ -15,8 +15,11 @@ var labelType, useGradients, nativeTextSupport, animate;
   animate = !(iStuff || !nativeCanvasSupport);
 })();
 
+// TODO this has to be changed depending to match the host we're running on
+// so it knows where to send async requests to update the graph.
 var base_url = "http://54.243.221.116:8000/";
 
+// Basic http get wrapper
 function httpGet(theUrl) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", theUrl, false);
@@ -42,16 +45,11 @@ function init(){
           dim: 9,
           color: "#bd2031"
       },
-      //transition: $jit.Trans.Back.easeOut,
       duration:1000,
       Edge: {
           overridable: true,
           lineWidth: 2,
           color: "#0000ff"
-      },
-      onBeforePlotLine: function(adj) {
-          //adj.data.$lineWidth = Math.random() * 17 + 1;
-          //console.log(adj.data);
       },
       //Attach event handlers and add text to the
       //labels. This method is only triggered on label

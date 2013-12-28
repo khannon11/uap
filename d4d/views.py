@@ -1,3 +1,7 @@
+"""
+Main controller for visualization package
+"""
+
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import json
@@ -6,8 +10,6 @@ import random
 from d4d_visualize import d4dExplorer
 from django.template import RequestContext
 from d4d import d4d
-
-# Create your views here.
 
 explorer = d4dExplorer()
 mini = 0
@@ -20,6 +22,11 @@ def normalize_truth_score(score):
   return (score - mini) / (maxi - mini)
 
 def get_similar_assertions(left, relation, right):
+  """
+  Use d4d to get assertions that are similar to the one we're currently
+  viewing.  Used to get neighbors in graph.
+
+  """
   similar_left = d4d.c4.similar_concepts_to(left)
   similar_right = d4d.c4.similar_concepts_to(right)
   similar_assertions = [("%s %s %s" % (str(left[0]), relation, str(right[0])),
@@ -41,6 +48,9 @@ def get_similar_assertions(left, relation, right):
   return normalized
 
 def similar_endpoint(request, left, relation, right, count, threshold):
+  """
+  Async endpoint for dynamically updating graph
+  """
   left = left.replace("_", " ")
   right = right.replace("_", " ")
   count = int(count)
@@ -56,7 +66,6 @@ def similar_endpoint(request, left, relation, right, count, threshold):
                            [similar_assertions[-1]]
   except KeyError as e:
     return HttpResponse(json.dumps("!!%s" % str(e)))
-  #return HttpResponse(json.dumps(similar_assertions))
   out = [{"id": assertion,
          "name": assertion,
          "data": {"$dim": 40 * normalize_truth_score(d4d.c4.how_true_is(assertion))},
@@ -76,9 +85,12 @@ def similar_endpoint(request, left, relation, right, count, threshold):
 def get_children(concept, exclude):
   explorer.concept = concept
   return [{"id": str(s[0]), "name": str(s[0]), "data": [], "children": []} for s in explorer.get_similar() if str(s[0]) not in exclude]
-  
+
 
 def visualize(request):
+  """
+  Main entry point, sets up visualization with empty initial parameters.
+  """
   return render_to_response('index.html', {},
          context_instance=RequestContext(request))
 

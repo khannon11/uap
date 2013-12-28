@@ -39,6 +39,9 @@ class d4dExplorer:
     self.reset()
 
   def get_similar(self):
+    """
+    Get concepts that are similar to our current concept
+    """
     if self.threshold is None:
       return d4d.c4.similar_concepts_to(self.concept, self.end)[self.start:]
     else:
@@ -47,6 +50,9 @@ class d4dExplorer:
                                 d4d.c4.similar_concepts_to(self.concept, 1000)))
 
   def get_assertions(self):
+    """
+    Get any assertions related to our current concept
+    """
     return d4d.c4.assertions_about(self.concept, 'both', self.end)[self.start:]
 
   def get_normalized_assertions(self):
@@ -56,7 +62,6 @@ class d4dExplorer:
   def print_similar(self):
     concepts = self.get_similar()
 
-    #TODO formatting...
     print "\nConcept\t\tScore"
     print "-" * 27
     for concept in concepts:
@@ -75,6 +80,9 @@ class d4dExplorer:
     self.finish = False
 
   def run(self):
+    """
+    Loop to explore conceptnet from command line
+    """
     self.finish = False
     while not self.finish:
       self.run_once()
